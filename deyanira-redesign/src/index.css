@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta de colores institucionales de The Money Bridge */
+  --color-space-cadet: #19255B;
+  --color-lapis-lazuli: #3065AF;
+  --color-tufts-blue: #3CA0DA;
+  --color-sea-serpent: #64C2C8;
+
+  /* Tipografía principal */
+  --font-sans: "Neue Plak", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-neue-plak: "Neue Plak", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Configuración de @font-face asumiendo que colocarás las fuentes en public/fonts/ */
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('/fonts/NeuePlak-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('/fonts/NeuePlak-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Estilos base de la aplicación */
+@layer base {
+  body {
+    @apply font-sans bg-white text-space-cadet antialiased;
+  }
+}
