@@ -1,20 +1,32 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
-import { Home } from './pages/Home';
 import { Footer } from './components/layout/Footer';
-import './App.css';
+import { Home } from './pages/Home';
+import { AboutPage } from './pages/AboutPage';
+// import { ServicesPage } from './pages/ServicesPage';
 
 function App() {
   return (
-    // Cambiamos bg-gray-50 por bg-white para que todo el lienzo base sea limpio
-    <div className="min-h-screen bg-white flex flex-col font-sans">
-      <Navbar />
+    <BrowserRouter>
+      <div className="min-h-screen w-full bg-white flex flex-col font-sans overflow-x-hidden">
+        <Navbar />
 
-      {/* Le quitamos el pt-20 a esta etiqueta */}
-      <main className="flex-grow">
-        <Home />
+        <main className="flex-grow w-full">
+          <Routes>
+            {/* Ruta principal (Landing) */}
+            <Route path="/" element={<Home />} />
+
+            {/* Rutas multipágina que iremos activando */}
+            <Route path="/nosotros" element={<AboutPage />} />
+            {/* <Route path="/nosotros" element={<AboutPage />} /> */}
+            {/* <Route path="/servicios" element={<ServicesPage />} /> */}
+            {/* <Route path="/contacto" element={<ContactPage />} /> */}
+          </Routes>
+        </main>
+
         <Footer />
-      </main>
-    </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
