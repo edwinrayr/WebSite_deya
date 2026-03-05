@@ -3,7 +3,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
 import { AboutPage } from './pages/AboutPage';
-// import { ServicesPage } from './pages/ServicesPage';
+import { ServicesPage } from './pages/ServicesPage';
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
             {/* Rutas multipágina que iremos activando */}
             <Route path="/nosotros" element={<AboutPage />} />
             {/* <Route path="/nosotros" element={<AboutPage />} /> */}
-            {/* <Route path="/servicios" element={<ServicesPage />} /> */}
+            <Route path="/servicios" element={<ServicesPage />} />
             {/* <Route path="/contacto" element={<ContactPage />} /> */}
           </Routes>
         </main>
