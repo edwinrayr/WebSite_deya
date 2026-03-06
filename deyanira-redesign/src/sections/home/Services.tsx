@@ -1,114 +1,132 @@
 // src/sections/home/Services.tsx
-import { LineChart, Landmark, ShieldCheck, Lightbulb, ArrowRight } from 'lucide-react';
+import { LineChart, Landmark, ShieldCheck, Lightbulb, ArrowRight, Sparkles } from 'lucide-react';
 
 const services = [
     {
         id: 'inversiones',
         title: 'Inversiones y Multiplicación',
-        description: 'Estrategias en renta fija, renta variable (acciones, ETFs, fibras, fondos) e inversiones inmobiliarias adaptadas a tu perfil de riesgo.',
+        description: 'Estrategias en renta fija, renta variable e inversiones inmobiliarias adaptadas a tu perfil de riesgo.',
         icon: LineChart,
-        color: 'text-tufts-blue',
-        bg: 'bg-tufts-blue/10',
-        borderHover: 'hover:border-tufts-blue'
+        glow: 'group-hover:shadow-[0_0_30px_-5px_#4A90E2]', // tufts-blue glow
+        gradient: 'from-tufts-blue to-lapis-lazuli'
     },
     {
         id: 'retiro',
         title: 'Estrategias para el Retiro',
-        description: 'Planes de inversión para el retiro (PPR), orientación especializada en AFORES y maximización de la pensión del IMSS bajo Modalidad 40.',
+        description: 'Planes de inversión para el retiro (PPR) y maximización de la pensión del IMSS bajo Modalidad 40.',
         icon: Landmark,
-        color: 'text-space-cadet',
-        bg: 'bg-space-cadet/10',
-        borderHover: 'hover:border-space-cadet'
+        glow: 'group-hover:shadow-[0_0_30px_-5px_#ffffff]', // white glow
+        gradient: 'from-gray-300 to-white'
     },
     {
         id: 'proteccion',
         title: 'Protección Patrimonial',
-        description: 'Blindaje para ti y tu familia a través de seguros de vida y la creación de fideicomisos educativos para garantizar el futuro de tus hijos.',
+        description: 'Blindaje familiar a través de seguros de vida y la creación de fideicomisos educativos.',
         icon: ShieldCheck,
-        color: 'text-sea-serpent',
-        bg: 'bg-sea-serpent/10',
-        borderHover: 'hover:border-sea-serpent'
+        glow: 'group-hover:shadow-[0_0_30px_-5px_#64C2C8]', // sea-serpent glow
+        gradient: 'from-sea-serpent to-tufts-blue'
     },
     {
         id: 'educacion',
         title: 'Educación Financiera',
-        description: 'Clases prácticas sobre mentalidad, administración financiera, uso estratégico de tarjetas de crédito y finanzas aplicadas al día a día.',
+        description: 'Clases prácticas sobre mentalidad, administración, tarjetas de crédito y finanzas del día a día.',
         icon: Lightbulb,
-        color: 'text-lapis-lazuli',
-        bg: 'bg-lapis-lazuli/10',
-        borderHover: 'hover:border-lapis-lazuli'
+        glow: 'group-hover:shadow-[0_0_30px_-5px_#19255B]', // space-cadet glow
+        gradient: 'from-lapis-lazuli to-tufts-blue'
     }
 ];
 
 export const Services = () => {
     return (
-        // Fondo blanco para contrastar con el gris de la sección anterior, sin dejar espacios.
-        <section id="servicios" className="py-16 lg:py-24 bg-white relative overflow-hidden">
+        // Cambio dramático: Fondo oscuro para un contraste premium
+        <section id="servicios" className="py-20 lg:py-32 bg-space-cadet relative overflow-hidden z-0">
 
-            {/* Elemento decorativo de fondo */}
-            <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-gray-50/50 to-transparent -z-10"></div>
+            {/* Luces de Neón de Fondo (Volumetric Lighting) */}
+            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-tufts-blue/10 rounded-full blur-[120px] -z-10 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-sea-serpent/10 rounded-full blur-[100px] -z-10 -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
-            <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+            {/* Grid principal decorativo */}
+            <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-5 mix-blend-overlay pointer-events-none"></div>
 
-                {/* Cabecera de la sección */}
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-blue-50 border border-blue-100 mb-6">
-                        <span className="text-lapis-lazuli text-sm font-bold tracking-wider uppercase">
-                            Portafolio Integral
-                        </span>
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-space-cadet tracking-tight mb-6">
-                        Soluciones para tu <span className="text-transparent bg-clip-text bg-gradient-to-r from-lapis-lazuli to-sea-serpent">crecimiento económico</span>
-                    </h2>
-                    <p className="text-lg text-gray-600 leading-relaxed">
-                        Ofrezco asesoría financiera personalizada, partiendo de un diagnóstico profesional que analiza tu situación actual y tus objetivos particulares.
-                    </p>
-                </div>
+            <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
 
-                {/* Grid de Servicios (Responsivo: 1 columna móvil, 2 tablet, 4 escritorio gigante) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-                    {services.map((service) => {
-                        const Icon = service.icon;
-                        return (
-                            <div
-                                key={service.id}
-                                className={`group relative bg-white rounded-3xl p-8 border-2 border-gray-100 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl ${service.borderHover} flex flex-col h-full cursor-pointer overflow-hidden`}
-                            >
-                                {/* Efecto de brillo de fondo al hacer hover */}
-                                <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-gray-50 to-transparent rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-150`}></div>
+                {/* Estructura dividida: Texto fijo a la izquierda, Tarjetas a la derecha */}
+                <div className="lg:grid lg:grid-cols-12 gap-16 lg:gap-24 items-center">
 
-                                <div className={`w-16 h-16 rounded-2xl ${service.bg} flex items-center justify-center mb-8 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
-                                    <Icon className={`w-8 h-8 ${service.color}`} />
-                                </div>
+                    {/* Columna Izquierda: Sticky/Info (Ocupa 5 columnas) */}
+                    <div className="lg:col-span-5 mb-16 lg:mb-0">
+                        <div className="lg:sticky lg:top-32">
 
-                                <h3 className="text-xl font-bold text-space-cadet mb-4 leading-snug">
-                                    {service.title}
-                                </h3>
-
-                                <p className="text-gray-600 mb-8 flex-grow leading-relaxed">
-                                    {service.description}
-                                </p>
-
-                                {/* Botón "Conocer más" integrado en la tarjeta */}
-                                <div className="mt-auto flex items-center text-sm font-bold text-space-cadet group-hover:text-lapis-lazuli transition-colors">
-                                    <span>Explorar estrategia</span>
-                                    <ArrowRight className="w-4 h-4 ml-2 transform transition-transform duration-300 group-hover:translate-x-2" />
-                                </div>
+                            <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md">
+                                <Sparkles className="w-4 h-4 text-sea-serpent animate-pulse" />
+                                <span className="text-white text-sm font-bold tracking-wider uppercase">
+                                    Portafolio Integral
+                                </span>
                             </div>
-                        )
-                    })}
-                </div>
 
-                {/* Call To Action Secundario */}
-                <div className="mt-16 text-center">
-                    <a
-                        href="#contacto"
-                        className="inline-flex justify-center items-center gap-2 px-8 py-3.5 border-2 border-space-cadet text-base font-semibold rounded-full text-space-cadet bg-white hover:bg-space-cadet hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg"
-                    >
-                        Solicitar un diagnóstico financiero
-                    </a>
-                </div>
+                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-8 leading-[1.1]">
+                                Soluciones para tu <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sea-serpent to-tufts-blue">
+                                    crecimiento
+                                </span>
+                            </h2>
 
+                            <p className="text-lg text-gray-300 leading-relaxed mb-10">
+                                No ofrecemos "paquetes prearmados". Cada estrategia nace de un diagnóstico financiero profundo, diseñado milimétricamente para proteger a tu familia y multiplicar tu patrimonio en el tiempo.
+                            </p>
+
+                            <a
+                                href="#contacto"
+                                className="inline-flex justify-center items-center gap-3 px-8 py-4 bg-sea-serpent text-space-cadet text-base font-bold rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 group"
+                            >
+                                Solicitar Diagnóstico
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Columna Derecha: Grid Asimétrico de Tarjetas (Ocupa 7 columnas) */}
+                    <div className="lg:col-span-7 relative">
+                        <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">
+                            {services.map((service, index) => {
+                                const Icon = service.icon;
+                                return (
+                                    <div
+                                        key={service.id}
+                                        /* Truco de diseño: Desplazamos la segunda columna hacia abajo para un look asimétrico */
+                                        className={`group relative bg-white/5 backdrop-blur-xl rounded-[2rem] p-8 border border-white/10 transition-all duration-500 hover:-translate-y-2 cursor-pointer overflow-hidden ${index % 2 !== 0 ? 'sm:translate-y-12' : ''
+                                            } ${service.glow}`}
+                                    >
+                                        {/* Resplandor interno de la tarjeta en Hover */}
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+
+                                        {/* Contenedor del Ícono con fondo dinámico */}
+                                        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-8 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
+                                            <Icon className="w-8 h-8 text-white" />
+                                        </div>
+
+                                        <h3 className="text-2xl font-bold text-white mb-4 leading-snug relative z-10">
+                                            {service.title}
+                                        </h3>
+
+                                        <p className="text-gray-400 mb-8 leading-relaxed relative z-10">
+                                            {service.description}
+                                        </p>
+
+                                        {/* Enlace interactivo */}
+                                        <div className="mt-auto flex items-center text-sm font-bold text-sea-serpent group-hover:text-white transition-colors relative z-10">
+                                            <span>Explorar estrategia</span>
+                                            <div className="ml-3 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-sea-serpent group-hover:w-10 transition-all duration-300">
+                                                <ArrowRight className="w-4 h-4 text-white" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </section>
     );
