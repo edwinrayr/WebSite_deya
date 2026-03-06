@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { AboutPage } from './pages/AboutPage';
 import { ServicesPage } from './pages/ServicesPage';
 import { RecognitionPage } from './pages/RecognitionPage';
+import { ContactPage } from './pages/ContactPage'; // ¡IMPORTACIÓN DESCOMENTADA!
 
 function App() {
   return (
@@ -14,15 +15,13 @@ function App() {
 
         <main className="flex-grow w-full">
           <Routes>
-            {/* Ruta principal (Landing) */}
             <Route path="/" element={<Home />} />
 
-            {/* Rutas multipágina que iremos activando */}
             <Route path="/nosotros" element={<AboutPage />} />
-            {/* <Route path="/nosotros" element={<AboutPage />} /> */}
             <Route path="/servicios" element={<ServicesPage />} />
-            {/* <Route path="/contacto" element={<ContactPage />} /> */}
-     <Route path="/reconocimientos" element={<RecognitionPage />} />
+            <Route path="/reconocimientos" element={<RecognitionPage />} />
+
+            <Route path="/contacto" element={<ContactPage />} />
           </Routes>
         </main>
 
