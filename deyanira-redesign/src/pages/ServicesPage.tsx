@@ -4,7 +4,7 @@ import { Benefits } from '../sections/services/Benefits';
 import { WingsStrategy } from '../sections/services/WingsStrategy';
 import { Comparison } from '../sections/services/Comparison';
 import { Testimonials } from '../sections/services/Testimonials';
-import { Pricing } from '../sections/services/Pricing';
+
 
 export const ServicesPage = () => {
     return (
@@ -15,7 +15,7 @@ export const ServicesPage = () => {
             <WingsStrategy />
             <Comparison />
             <Testimonials />
-            <Pricing />
+          
         </main>
     );
 };
