@@ -1,84 +1,228 @@
-import { PlayCircle, MessageCircle, Quote, Star } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Play, Pause, MessageCircle } from 'lucide-react';
 
-export const Testimonials = () => {
-    const whatsappChats = [
-        { name: "Adriana G.", text: "Deya, ¡ya abrí mi primera cuenta regulada! No puedo creer lo fácil que fue.", color: "bg-green-50" },
-        { name: "Carlos R.", text: "Por fin entiendo a dónde se iba mi dinero. Mi fondo de paz ya está creciendo.", color: "bg-blue-50" }
-    ];
+const CustomPlayer = ({ src, id, isPlaying, onToggle, videoRef }: any) => {
+    const [progress, setProgress] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            const current = videoRef.current.currentTime;
+            const total = videoRef.current.duration;
+            setCurrentTime(current);
+            setProgress((current / total) * 100);
+        }
+    };
+
+    const handleLoadedMetadata = () => {
+        if (videoRef.current) setDuration(videoRef.current.duration);
+    };
+
+    const handleSeek = (e: any) => {
+        const seekTo = (parseFloat(e.target.value) / 100) * duration;
+        if (videoRef.current) {
+            videoRef.current.currentTime = seekTo;
+            setProgress(parseFloat(e.target.value));
+        }
+    };
+
+    const formatTime = (time: number) => {
+        const mins = Math.floor(time / 60);
+        const secs = Math.floor(time % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    };
 
     return (
-        <section className="py-24 bg-gray-50/50 relative overflow-hidden">
-            <div className="max-w-[1440px] mx-auto px-6 lg:px-16">
+        <div className="relative w-full h-full group bg-black rounded-[2rem] overflow-hidden">
 
-                {/* Encabezado de la sección */}
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-black text-space-cadet mb-4">
-                        Historias de <span className="text-lapis-lazuli">Éxito Real</span>
+            <video
+                ref={videoRef}
+                src={src}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onClick={onToggle}
+                className={`w-full h-full object-cover transition-all duration-700 ${isPlaying ? 'opacity-100' : 'opacity-70 scale-105'
+                    }`}
+                playsInline
+            />
+
+            {!isPlaying && (
+                <div
+                    className="absolute inset-0 flex items-center justify-center cursor-pointer"
+                    onClick={onToggle}
+                >
+                    <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/40 hover:scale-110 transition">
+                        <Play className="text-white fill-white ml-1" size={32} />
+                    </div>
+                </div>
+            )}
+
+            <div className="absolute bottom-0 left-0 right-0 p-5 opacity-0 group-hover:opacity-100 transition bg-gradient-to-t from-black/80 to-transparent">
+
+                <div className="flex items-center gap-3 mb-2">
+                    <button onClick={onToggle} className="text-white">
+                        {isPlaying ? <Pause size={22} fill="white" /> : <Play size={22} fill="white" />}
+                    </button>
+
+                    <span className="text-xs text-white/80 font-mono">
+                        {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+                </div>
+
+                <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={progress}
+                    onChange={handleSeek}
+                    className="w-full h-1.5 appearance-none rounded-full bg-white/20 accent-cyan-400"
+                />
+            </div>
+        </div>
+    );
+};
+
+export const Testimonials = () => {
+
+    const [playingId, setPlayingId] = useState<string | null>(null);
+
+    const videoRef1 = useRef<HTMLVideoElement>(null);
+    const videoRef2 = useRef<HTMLVideoElement>(null);
+
+    const toggleVideo = (id: string) => {
+
+        const v1 = videoRef1.current;
+        const v2 = videoRef2.current;
+
+        if (playingId === id) {
+            id === 'v1' ? v1?.pause() : v2?.pause();
+            setPlayingId(null);
+        } else {
+            v1?.pause();
+            v2?.pause();
+
+            id === 'v1' ? v1?.play() : v2?.play();
+
+            setPlayingId(id);
+        }
+    };
+
+    return (
+        <section className="relative py-32 bg-gradient-to-b from-white via-blue-50/40 to-white overflow-hidden">
+
+            {/* Glow fintech */}
+            <div className="absolute top-1/2 left-1/2 w-[900px] h-[500px] -translate-x-1/2 -translate-y-1/2 bg-cyan-400/20 blur-[140px] rounded-full pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-6 relative z-10">
+
+                {/* Header */}
+                <div className="mb-20 text-center">
+
+                    <h2 className="text-5xl md:text-7xl font-black tracking-tight text-slate-900">
+                        TESTIMONIOS
+                        <br />
+
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 italic">
+                            REALES
+                        </span>
+
                     </h2>
-                    <div className="flex justify-center gap-1 text-sea-serpent mb-4">
-                        {[...Array(5)].map((_, i) => <Star key={i} fill="currentColor" size={20} />)}
-                    </div>
-                    <p className="text-gray-500 font-medium">Ellos ya dieron el paso hacia una vida financiera con propósito.</p>
-                </div>
 
-                {/* Grid de Videos (Los 2 protagonistas) */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20">
-
-                    {/* Video 1 */}
-                    <div className="group relative rounded-[3rem] overflow-hidden shadow-2xl bg-space-cadet aspect-video lg:aspect-auto lg:h-[450px] cursor-pointer">
-                        <img
-                            src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1000&auto=format&fit=crop"
-                            alt="Testimonio Video 1"
-                            className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-white/20 backdrop-blur-md p-6 rounded-full group-hover:bg-sea-serpent transition-all duration-500">
-                                <PlayCircle className="text-white" size={60} strokeWidth={1.5} />
-                            </div>
-                        </div>
-                        <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-space-cadet to-transparent">
-                            <p className="text-white font-bold text-xl italic">"La mejor inversión que he hecho para mi futuro."</p>
-                            <span className="text-sea-serpent font-black text-sm tracking-widest uppercase mt-2 block">Ver testimonio completo</span>
-                        </div>
-                    </div>
-
-                    {/* Video 2 */}
-                    <div className="group relative rounded-[3rem] overflow-hidden shadow-2xl bg-space-cadet aspect-video lg:aspect-auto lg:h-[450px] cursor-pointer">
-                        <img
-                            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop"
-                            alt="Testimonio Video 2"
-                            className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-white/20 backdrop-blur-md p-6 rounded-full group-hover:bg-sea-serpent transition-all duration-500">
-                                <PlayCircle className="text-white" size={60} strokeWidth={1.5} />
-                            </div>
-                        </div>
-                        <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-space-cadet to-transparent">
-                            <p className="text-white font-bold text-xl italic">"Dejé de tener miedo a mis estados de cuenta."</p>
-                            <span className="text-sea-serpent font-black text-sm tracking-widest uppercase mt-2 block">Ver testimonio completo</span>
-                        </div>
-                    </div>
+                    <p className="mt-6 text-slate-500 max-w-xl mx-auto">
+                        Personas reales que ya están tomando control de su dinero.
+                    </p>
 
                 </div>
 
-                {/* WhatsApp Evidence (Debajo de los videos para soporte) */}
-                <div className="flex flex-col md:flex-row justify-center gap-6">
-                    {whatsappChats.map((chat, i) => (
-                        <div key={i} className={`${chat.color} p-6 rounded-[2rem] rounded-tl-none border border-black/5 shadow-sm max-w-md relative`}>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm text-green-500">
-                                    <MessageCircle size={16} fill="currentColor" />
-                                </div>
-                                <span className="font-bold text-space-cadet text-sm">{chat.name}</span>
+                {/* VIDEOS */}
+                <div className="flex flex-col lg:flex-row items-end gap-12 mb-28">
+
+                    {/* Video horizontal */}
+                    <div className="w-full lg:w-[60%]">
+
+                        <div className="rounded-[2.5rem] p-2 bg-white/5 backdrop-blur-xl border border-sea-serpent/40 shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
+
+                            <div className="aspect-video">
+
+                                <CustomPlayer
+                                    src="/videos/services/paso-1.mp4"
+                                    id="v1"
+                                    isPlaying={playingId === 'v1'}
+                                    onToggle={() => toggleVideo('v1')}
+                                    videoRef={videoRef1}
+                                />
+
                             </div>
-                            <p className="text-gray-600 text-sm italic">"{chat.text}"</p>
-                            <Quote className="absolute top-4 right-4 text-black/5" size={30} />
+
                         </div>
+
+                    </div>
+
+                    {/* Video vertical */}
+                    <div className="w-full lg:w-[30%] flex justify-center">
+
+                        <div className="relative w-full max-w-[260px] p-3 bg-white/70 backdrop-blur-xl rounded-[3rem] border border-white/40 shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
+
+                            <div className="aspect-[9/18]">
+
+                                <CustomPlayer
+                                    src="/videos/services/paso-2.mp4"
+                                    id="v2"
+                                    isPlaying={playingId === 'v2'}
+                                    onToggle={() => toggleVideo('v2')}
+                                    videoRef={videoRef2}
+                                />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {/* TESTIMONIOS CHAT */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+
+                    {[
+                        {
+                            name: "Adriana G.",
+                            text: "Deya, ¡ya abrí mi primera cuenta regulada! No puedo creer lo fácil que fue."
+                        },
+                        {
+                            name: "Carlos R.",
+                            text: "Por fin entiendo a dónde se iba mi dinero. Mi fondo de paz ya está creciendo."
+                        }
+                    ].map((msg, i) => (
+
+                        <div
+                            key={i}
+                            className="p-8 rounded-[2rem] bg-white/70 backdrop-blur-xl border border-slate-200 shadow-lg hover:shadow-xl transition"
+                        >
+
+                            <div className="flex items-center gap-3 mb-4 text-blue-500">
+
+                                <MessageCircle size={20} />
+
+                                <span className="font-semibold text-slate-900">
+                                    {msg.name}
+                                </span>
+
+                            </div>
+
+                            <p className="text-slate-600 italic leading-relaxed">
+                                "{msg.text}"
+                            </p>
+
+                        </div>
+
                     ))}
+
                 </div>
 
             </div>
+
         </section>
     );
 };
