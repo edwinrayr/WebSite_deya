@@ -4,13 +4,11 @@ import { TrendingUp, MapPin } from "lucide-react";
 type TimelineItem = { year: number; title: string; location: string };
 
 function extractTopNumber(title: string) {
-  // "Top 100 Nacional" -> 100
   const match = title.match(/Top\s+(\d+)/i);
   return match ? Number(match[1]) : null;
 }
 
 export const NationalAwardsCard = ({ items }: { items: TimelineItem[] }) => {
-  // Para barras: menor Top = mejor (Top 25 mejor que Top 100)
   const tops = items
     .map((it) => ({ ...it, top: extractTopNumber(it.title) }))
     .filter((it) => typeof it.top === "number") as Array<TimelineItem & { top: number }>;
@@ -19,13 +17,12 @@ export const NationalAwardsCard = ({ items }: { items: TimelineItem[] }) => {
   const minTop = tops.length ? Math.min(...tops.map((t) => t.top)) : 1;
 
   const barWidth = (top: number) => {
-    // Mejor (minTop) -> barra más larga
     const norm = (maxTop - top) / (maxTop - minTop || 1);
-    return 30 + norm * 70; // 30% a 100%
+    return 30 + norm * 70;
   };
 
   return (
-    <div className="rounded-3xl bg-white border border-gray-100 shadow-sm overflow-hidden">
+    <div className="rounded-3xl bg-white border border-gray-100 shadow-sm overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:border-tufts-blue/40">
       <div className="p-8 sm:p-10">
         <div className="flex items-start justify-between gap-6">
           <div>
@@ -35,6 +32,7 @@ export const NationalAwardsCard = ({ items }: { items: TimelineItem[] }) => {
                 Premiaciones nacionales
               </span>
             </div>
+
             <h3 className="mt-4 text-2xl font-extrabold text-space-cadet">
               Evolución del ranking
             </h3>
@@ -50,7 +48,10 @@ export const NationalAwardsCard = ({ items }: { items: TimelineItem[] }) => {
             const width = typeof top === "number" ? barWidth(top) : 45;
 
             return (
-              <div key={idx} className="rounded-2xl border border-gray-100 bg-gray-50 p-5">
+              <div
+                key={idx}
+                className="rounded-2xl border border-gray-100 bg-gray-50 p-5 transition-all duration-300 hover:bg-white hover:shadow-md hover:border-tufts-blue/25 hover:-translate-y-0.5"
+              >
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-xs font-bold text-gray-400">{it.year}</p>
@@ -68,7 +69,7 @@ export const NationalAwardsCard = ({ items }: { items: TimelineItem[] }) => {
                     </p>
                   </div>
                 </div>
-
+                
                 {/* Barra */}
                 <div className="mt-4 h-3 w-full bg-white rounded-full border border-gray-100 overflow-hidden">
                   <div

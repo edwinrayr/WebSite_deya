@@ -1,9 +1,18 @@
 // src/pages/RecognitionPage.tsx
 import { useEffect } from "react";
+
 import { Header } from "../sections/Recognition/Header";
 import { MdrtCard } from "../sections/Recognition/MdrtCard";
 import { CredentialsCard } from "../sections/Recognition/CredentialsCard";
 import { NationalAwardsCard } from "../sections/Recognition/NationalAwardsCard";
+import { BlogRecognition } from "../sections/Recognition/BlogRecognition";
+
+import { SectionNav } from "../sections/Recognition/SectionNav";
+import { TrustMetrics } from "../sections/Recognition/TrustMetrics";
+import { ProcessSteps } from "../sections/Recognition/ProcessSteps";
+import { RecognitionFAQ } from "../sections/Recognition/RecognitionFAQ";
+import { RecognitionCTA } from "../sections/Recognition/RecognitionCTA";
+
 import { Contact } from "../sections/home/Contact";
 
 export const RecognitionPage = () => {
@@ -31,24 +40,66 @@ export const RecognitionPage = () => {
 
   return (
     <div className="pt-20 lg:pt-24 bg-white">
+      {/* Hero/Header de Reconocimientos */}
       <Header />
-      <section className="py-16 lg:py-24 bg-white">
+
+      {/* Nav interna + métricas (misma anchura centrada que todo) */}
+      <section className="bg-white">
+        <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-10 space-y-8">
+          
+          <TrustMetrics />
+        </div>
+      </section>
+
+      {/* Grid principal: MDRT + Ranking (izq) / Credenciales sticky (der) */}
+      <section className="bg-white py-10 lg:py-14">
         <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Columna principal */}
+            {/* Izquierda */}
             <div className="lg:col-span-8 space-y-8">
-              <MdrtCard items={mdrtHistory} />
-              <NationalAwardsCard items={nationalAwards} />
+              <div id="mdrt">
+                <MdrtCard items={mdrtHistory} />
+              </div>
+
+              <div id="premios">
+                <NationalAwardsCard items={nationalAwards} />
+              </div>
             </div>
 
-            {/* Columna derecha sticky */}
-            <div className="lg:col-span-4 lg:sticky lg:top-28">
+            {/* Derecha sticky */}
+            <div
+              id="credenciales"
+              className="lg:col-span-4 lg:sticky lg:top-28 space-y-8"
+            >
               <CredentialsCard items={credentials} />
             </div>
           </div>
         </div>
       </section>
 
+      {/* ✅ ProcessSteps (sin card, web centered) */}
+      <section className="bg-white">
+        <div className="w-full max-w-[1440px] mx-auto">
+          <ProcessSteps />
+        </div>
+      </section>
+
+      {/* ✅ FAQ (sin card, web centered) */}
+      <section className="bg-white">
+        <div className="w-full max-w-[1440px] mx-auto">
+          <RecognitionFAQ />
+        </div>
+      </section>
+
+      {/* Blog (ancho completo dentro del mismo contenedor) */}
+      <section id="blog" className="bg-white py-10 lg:py-14">
+        <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+          <BlogRecognition />
+        </div>
+      </section>
+
+
+      {/* Contacto final */}
       <Contact />
     </div>
   );

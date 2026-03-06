@@ -4,14 +4,17 @@ import { Trophy, BadgeCheck, Globe2, Sparkles } from "lucide-react";
 export const Header = () => {
   return (
     <section className="relative overflow-hidden bg-space-cadet">
-      {/* ✅ SIN “luces”: quitamos gradients/blur/pattern */}
       <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-14 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Texto */}
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 border border-white/15 mb-6 backdrop-blur-sm">
-              <Trophy className="w-4 h-4 text-sea-serpent" />
-              <span className="text-white/90 text-sm font-bold tracking-wider uppercase">
+            {/* Badge + Trofeo con halo suave */}
+            <div className="inline-flex items-center gap-3 py-2 px-5 rounded-full bg-white/10 border border-white/15 shadow-sm mb-8">
+              <span className="relative inline-flex items-center justify-center">
+                <Trophy className="relative w-4 h-4 text-sea-serpent trophy-bounce-soft" />
+              </span>
+
+              <span className="text-white text-sm font-black tracking-wider uppercase">
                 Reconocimientos
               </span>
             </div>
@@ -26,10 +29,10 @@ export const Header = () => {
             </p>
           </div>
 
-          {/* Stats / mini-cards (mismo diseño + iconos) */}
+          {/* Stats / mini-cards */}
           <div className="lg:col-span-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
+              <div className="rounded-3xl bg-white/10 border border-white/15 p-6">
                 <div className="w-12 h-12 rounded-2xl bg-sea-serpent/20 flex items-center justify-center mb-4">
                   <BadgeCheck className="w-6 h-6 text-sea-serpent" />
                 </div>
@@ -37,7 +40,7 @@ export const Header = () => {
                 <p className="text-gray-300 text-sm mt-1">Certificación vigente</p>
               </div>
 
-              <div className="rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
+              <div className="rounded-3xl bg-white/10 border border-white/15 p-6">
                 <div className="w-12 h-12 rounded-2xl bg-tufts-blue/20 flex items-center justify-center mb-4">
                   <Globe2 className="w-6 h-6 text-tufts-blue" />
                 </div>
@@ -45,13 +48,15 @@ export const Header = () => {
                 <p className="text-gray-300 text-sm mt-1">Distinción internacional</p>
               </div>
 
-              <div className="sm:col-span-2 rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
+              <div className="sm:col-span-2 rounded-3xl bg-white/10 border border-white/15 p-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-lapis-lazuli/20 flex items-center justify-center">
                     <Sparkles className="w-6 h-6 text-lapis-lazuli" />
                   </div>
                   <div>
-                    <p className="text-white font-extrabold text-lg">Confianza + Evidencia</p>
+                    <p className="text-white font-extrabold text-lg">
+                      Confianza + Evidencia
+                    </p>
                     <p className="text-gray-300 text-sm mt-1 leading-relaxed">
                       La experiencia se demuestra con resultados medibles y acreditaciones verificables.
                     </p>
