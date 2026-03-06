@@ -1,96 +1,113 @@
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Play, Pause, MessageCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, Pause, MessageCircle, Star, Award } from 'lucide-react';
 
-// --- COMPONENTE: CARRUSEL INFINITO ÚNICO ---
+// --- ANIMACIONES CONFIG (Mantenemos las buenas) ---
+const starContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.4 } }
+};
+
+const starItemVariants = {
+    hidden: { opacity: 0, scale: 0, rotate: -45 },
+    visible: {
+        opacity: 1, scale: 1, rotate: 0,
+        transition: { type: "spring", stiffness: 200, damping: 12 }
+    }
+};
+
 const TestimonialMarquee = ({ items }: { items: any[] }) => {
     return (
-        <div className="relative flex overflow-hidden py-12 border-t border-slate-100">
+        <div className="relative flex overflow-hidden py-12 md:py-16 border-t border-slate-100 bg-slate-50/50">
             <motion.div
-                className="flex whitespace-nowrap gap-8"
-                animate={{ x: [0, -1500] }}
-                transition={{
-                    duration: 50,
-                    repeat: Infinity,
-                    ease: "linear"
-                }}
-                style={{ width: "fit-content" }}
+                className="flex gap-6 md:gap-8"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+                style={{ width: "max-content" }}
             >
-                {[...items, ...items, ...items].map((msg, i) => (
-                    <div key={i} className="inline-block p-8 rounded-[2.5rem] bg-white/80 backdrop-blur-xl border border-slate-200 shadow-sm hover:border-[#4ECDC4]/50 transition-colors">
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className="p-2 bg-[#4ECDC4]/10 rounded-full">
-                                <MessageCircle size={18} className="text-[#4ECDC4]" />
+                {[...items, ...items].map((msg, i) => (
+                    <motion.div
+                        key={i}
+                        whileHover={{ y: -8, scale: 1.02 }} // Mantenemos la elevación en hover
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        className="flex-shrink-0 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:border-[#64C2C8]/40 transition-colors group w-[280px] md:w-[380px] cursor-pointer"
+                    >
+                        <div className="flex items-center gap-3 md:gap-4 mb-4">
+                            <motion.div
+                                whileHover={{ rotate: [0, -10, 10, 0] }} // Mantenemos el giro del icono
+                                className="p-2.5 md:p-3 bg-[#64C2C8]/10 rounded-xl md:rounded-2xl group-hover:bg-[#64C2C8] transition-colors duration-300"
+                            >
+                                <MessageCircle size={20} className="text-[#64C2C8] group-hover:text-white" />
+                            </motion.div>
+                            <div>
+                                <span className="block font-black text-[#19255B] text-sm md:text-lg uppercase tracking-tight">{msg.name}</span>
+                                <div className="flex text-amber-400">
+                                    {[...Array(5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+                                </div>
                             </div>
-                            <span className="font-bold text-slate-900">{msg.name}</span>
                         </div>
-                        <p className="text-slate-600 italic text-lg leading-relaxed">
+                        <p className="text-slate-600 italic text-sm md:text-lg leading-relaxed font-medium whitespace-normal">
                             "{msg.text}"
                         </p>
-                    </div>
+                    </motion.div>
                 ))}
             </motion.div>
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+            <div className="absolute inset-y-0 left-0 w-16 md:w-40 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-16 md:w-40 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
         </div>
     );
 };
 
-const CustomPlayer = ({ src, id, isPlaying, onToggle, videoRef }: any) => {
+const CustomPlayer = ({ src, id, isPlaying, onToggle, videoRef, label, sublabel }: any) => {
     const [progress, setProgress] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-
-    const handleTimeUpdate = () => {
-        if (videoRef.current) {
-            const current = videoRef.current.currentTime;
-            const total = videoRef.current.duration;
-            setCurrentTime(current);
-            setProgress((current / total) * 100);
-        }
-    };
-
-    const handleLoadedMetadata = () => {
-        if (videoRef.current) setDuration(videoRef.current.duration);
-    };
-
-    const formatTime = (time: number) => {
-        const mins = Math.floor(time / 60);
-        const secs = Math.floor(time % 60);
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-    };
 
     return (
-        <div className="relative w-full h-full group bg-black rounded-[2rem] overflow-hidden">
+        <div className="relative w-full h-full group bg-[#19255B] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden">
             <video
                 ref={videoRef}
                 src={src}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata}
+                onTimeUpdate={() => videoRef.current && setProgress((videoRef.current.currentTime / videoRef.current.duration) * 100)}
                 onClick={onToggle}
-                className={`w-full h-full object-cover transition-all duration-700 ${isPlaying ? 'opacity-100' : 'opacity-70 scale-105'}`}
+                className={`w-full h-full object-cover transition-transform duration-1000 ${isPlaying ? 'scale-100' : 'scale-105 opacity-80'}`}
                 playsInline
             />
 
-            {!isPlaying && (
-                <div className="absolute inset-0 flex items-center justify-center cursor-pointer" onClick={onToggle}>
-                    <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/40 hover:scale-110 transition">
-                        <Play className="text-white fill-white ml-1" size={32} />
-                    </div>
-                </div>
-            )}
+            <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20">
+                <motion.div
+                    whileHover={{ x: 5 }} // Mantenemos la micro-animación del label
+                    className="bg-[#19255B]/90 backdrop-blur-sm px-3 py-1.5 md:px-5 md:py-3 rounded-xl md:rounded-2xl border-l-4 border-[#64C2C8]"
+                >
+                    <p className="text-white font-black text-[10px] md:text-sm uppercase tracking-wide">{label}</p>
+                    <p className="text-[#64C2C8] text-[8px] md:text-[10px] font-bold uppercase tracking-widest mt-0.5">{sublabel}</p>
+                </motion.div>
+            </div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-5 opacity-0 group-hover:opacity-100 transition bg-gradient-to-t from-black/80 to-transparent">
-                <div className="flex items-center gap-3 mb-2">
-                    <button onClick={onToggle} className="text-white">
-                        {isPlaying ? <Pause size={22} fill="white" /> : <Play size={22} fill="white" />}
+            <AnimatePresence>
+                {!isPlaying && (
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="absolute inset-0 flex items-center justify-center z-20 bg-black/10"
+                    >
+                        <motion.button
+                            whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                            onClick={onToggle}
+                            className="w-16 h-16 md:w-24 md:h-24 bg-[#64C2C8] text-white rounded-full flex items-center justify-center shadow-lg"
+                        >
+                            <Play fill="currentColor" className="w-8 h-8 md:w-10 md:h-10 ml-1" />
+                        </motion.button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <div className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-8 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-gradient-to-t from-[#19255B] to-transparent">
+                <div className="flex items-center justify-between mb-2">
+                    <button onClick={onToggle} className="text-[#64C2C8]">
+                        {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
                     </button>
-                    <span className="text-xs text-white/80 font-mono">
-                        {formatTime(currentTime)} / {formatTime(duration)}
-                    </span>
+                    <div className="text-[8px] md:text-[10px] text-white/60 font-black tracking-widest uppercase">HD STREAM</div>
                 </div>
                 <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#4ECDC4] transition-all" style={{ width: `${progress}%` }} />
+                    <motion.div className="h-full bg-[#64C2C8]" style={{ width: `${progress}%` }} />
                 </div>
             </div>
         </div>
@@ -99,104 +116,104 @@ const CustomPlayer = ({ src, id, isPlaying, onToggle, videoRef }: any) => {
 
 export const Testimonials = () => {
     const [playingId, setPlayingId] = useState<string | null>(null);
-    const videoRef1 = useRef<HTMLVideoElement>(null);
-    const videoRef2 = useRef<HTMLVideoElement>(null);
+    const vRef1 = useRef<HTMLVideoElement>(null);
+    const vRef2 = useRef<HTMLVideoElement>(null);
 
     const toggleVideo = (id: string) => {
-        const v1 = videoRef1.current;
-        const v2 = videoRef2.current;
         if (playingId === id) {
-            id === 'v1' ? v1?.pause() : v2?.pause();
+            id === 'v1' ? vRef1.current?.pause() : vRef2.current?.pause();
             setPlayingId(null);
         } else {
-            v1?.pause(); v2?.pause();
-            id === 'v1' ? v1?.play() : v2?.play();
+            vRef1.current?.pause(); vRef2.current?.pause();
+            id === 'v1' ? vRef1.current?.play() : vRef2.current?.play();
             setPlayingId(id);
         }
     };
 
-    const allTestimonials = [
-        { name: "Adrian Diaz", text: "Me emociona saber que logré más de mi meta." },
-        { name: "Adriana G.", text: "Deya, ¡ya abrí mi primera cuenta regulada! Muy fácil." },
-        { name: "Lizbeth Figueroa", text: "No sería quien soy sin personitas maravillosas como tú." },
-        { name: "Itayetzi Romero", text: "Gracias por estar al pendiente siempre y por enseñarme." },
-        { name: "Aldahir Ramírez", text: "Con tu ayuda los sueños parecen más fáciles de cumplir." },
-        { name: "Carlos R.", text: "Por fin entiendo a dónde se iba mi dinero. Mi fondo crece." },
-        { name: "Adrian Diaz", text: "Tu ayuda es un súper gol a la economía." },
-        { name: "Itayetzi Romero", text: "No sabes qué chido tener una preocupación menos en esta vida." },
-        { name: "Lizbeth Figueroa", text: "Muchísimas gracias por todo, Deya." }
+    const realTestimonials = [
+        { name: "Itayetzi Romero", text: "Muchas gracias Deya, ¡qué bonito! Gracias por estar al pendiente siempre y por enseñarme tanto sobre mis finanzas personales." },
+        { name: "Lizbeth Figueroa", text: "Hola Deya! Muchísimas gracias por todo. No sería quien soy sin personitas maravillosas como tú en mi vida." },
+        { name: "Adriana Díaz", text: "Me emociona saber que logré más de mi meta... Tu ayuda es un súper gol a la economía." },
+        { name: "Aldahir Ramírez", text: "Muchas gracias, con tu ayuda los sueños parecen más fáciles de cumplir." },
+        { name: "Dra. Claudia Peña", text: "Por fin entiendo a dónde se iba mi dinero. Mi fondo crece y me siento segura." }
     ];
 
     return (
-        <section className="relative py-40 bg-white overflow-hidden">
-            {/* Glow Fintech Sea Serpent */}
-            <div className="absolute top-1/2 left-1/2 w-[800px] h-[400px] -translate-x-1/2 -translate-y-1/2 bg-[#4ECDC4]/10 blur-[130px] rounded-full pointer-events-none" />
-
+        <section className="relative py-16 md:py-32 bg-white overflow-hidden font-sans">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
-                {/* Header Estilo Reporte */}
-                <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-                    <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4ECDC4]/10 border border-[#4ECDC4]/20 mb-4">
-                            <span className="w-2 h-2 rounded-full bg-[#4ECDC4] animate-pulse"></span>
-                            <span className="text-[#4ECDC4] text-xs font-bold uppercase tracking-widest">Resultados</span>
-                        </div>
-                        <h2 className="text-5xl md:text-7xl font-black tracking-tight text-slate-900">
-                            TESTIMONIOS<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-[#4ECDC4] italic font-serif">
-                                REALES
-                            </span>
+                <div className="mb-12 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
+                        className="max-w-2xl"
+                    >
+                        <span className="text-[#64C2C8] font-black tracking-[0.3em] text-xs uppercase mb-4 block border-l-4 border-[#64C2C8] pl-4">Testimonios</span>
+                        <h2 className="text-4xl md:text-7xl lg:text-8xl font-black text-[#19255B] leading-[0.9]">
+                            HISTORIAS DE <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#19255B] to-[#64C2C8] italic font-serif block mt-2 py-1 md:py-2">ÉXITO REAL</span>
                         </h2>
-                    </div>
-                    <p className="mt-6 text-slate-500 max-w-sm text-lg border-l-2 border-slate-100 pl-6">
-                        Historias reales de personas que tomaron el control de su futuro financiero.
-                    </p>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+                        className="flex items-center gap-4 p-5 md:p-6 rounded-[2rem] bg-[#19255B] border-b-4 border-[#64C2C8] shadow-xl shadow-[#19255B]/10 self-start md:self-end"
+                    >
+                        <motion.div
+                            animate={{ rotateY: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                            className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#64C2C8] flex items-center justify-center text-white shrink-0"
+                        >
+                            <Award className="w-7 h-7 md:w-8 md:h-8" />
+                        </motion.div>
+                        <div className="text-left">
+                            <motion.div className="flex text-amber-400 mb-1" variants={starContainerVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                                {[...Array(5)].map((_, i) => <motion.div key={i} variants={starItemVariants}><Star size={14} fill="currentColor" /></motion.div>)}
+                            </motion.div>
+                            <p className="text-white font-black text-xs md:text-sm uppercase tracking-widest leading-none">Excelencia Garantizada</p>
+                        </div>
+                    </motion.div>
                 </div>
 
-                {/* DASHBOARD DE VIDEOS INTEGRADO */}
-                <div className="relative grid grid-cols-12 gap-8 items-center mb-20">
-                    {/* Video Horizontal Principal */}
-                    <div className="col-span-12 lg:col-span-8 group">
-                        <div className="relative rounded-[2.8rem] p-2 bg-white border border-slate-200 shadow-2xl transition-transform duration-500 hover:scale-[1.01]">
-                            <div className="aspect-video">
-                                <CustomPlayer
-                                    src="/videos/services/paso-1.mp4"
-                                    id="v1"
-                                    isPlaying={playingId === 'v1'}
-                                    onToggle={() => toggleVideo('v1')}
-                                    videoRef={videoRef1}
-                                />
-                            </div>
+                {/* ESTRUCTURA DE VIDEOS RESPONSIVA Y ESTÁTICA */}
+                <div className="grid grid-cols-12 gap-8 items-center mb-20 md:mb-32 relative">
+                    {/* Video 1: Itayetzi Romero (Horizontal) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                        className="col-span-12 lg:col-span-8 relative z-10"
+                    >
+                        {/* Margen delgado (p-1.5) y sin sombra shadow-2xl */}
+                        <div className="aspect-video relative p-1.5 md:p-2 bg-slate-50 border border-slate-100 rounded-[2rem] md:rounded-[2.5rem]">
+                            <CustomPlayer
+                                src="/videos/services/paso-1.mp4" id="v1" label="Biol. Itayetzi Romero" sublabel="Bióloga e Investigadora"
+                                isPlaying={playingId === 'v1'} onToggle={() => toggleVideo('v1')} videoRef={vRef1}
+                            />
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Video Vertical en "Smartphone Mockup" */}
-                    <div className="col-span-12 lg:col-span-4 flex justify-center lg:-ml-16 z-20">
-                        <div className="relative w-full max-w-[280px] group">
-                            {/* Marco de Smartphone Minimalista */}
-                            <div className="relative bg-slate-900 rounded-[3.5rem] p-3 border-[8px] border-slate-800 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] transform lg:rotate-3 hover:rotate-0 transition-transform duration-700">
-                                {/* Sensor/Bocina Mockup */}
-                                <div className="absolute top-6 left-1/2 -translate-x-1/2 w-16 h-1 bg-slate-700 rounded-full z-30"></div>
-
-                                <div className="aspect-[9/19] rounded-[2.5rem] overflow-hidden bg-black">
+                    {/* Video 2: Dra. Claudia Peña (Vertical) - AHORA ESTÁTICO */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, delay: 0.2 }}
+                        // Quitamos el animate={{ y: [0, 15, 0] }} para que se quede fijo
+                        className="col-span-12 sm:col-span-6 sm:col-start-4 lg:col-span-4 lg:-ml-16 z-20"
+                    >
+                        <div className="relative mx-auto max-w-[280px] md:max-w-[320px]">
+                            {/* Margen delgado (p-2.5) y sin sombra shadow-2xl */}
+                            <div className="bg-[#19255B] p-2.5 md:p-3 rounded-[3.5rem] md:rounded-[4rem] border border-white/5 relative shadow-xl shadow-[#19255B]/10">
+                                <div className="aspect-[9/19] rounded-[2.8rem] md:rounded-[3.2rem] overflow-hidden relative border border-white/5">
                                     <CustomPlayer
-                                        src="/videos/services/paso-2.mp4"
-                                        id="v2"
-                                        isPlaying={playingId === 'v2'}
-                                        onToggle={() => toggleVideo('v2')}
-                                        videoRef={videoRef2}
+                                        src="/videos/services/paso-2.mp4" id="v2" label="Dra. Claudia Peña Pacheco" sublabel="Médico Patólogo"
+                                        isPlaying={playingId === 'v2'} onToggle={() => toggleVideo('v2')} videoRef={vRef2}
                                     />
                                 </div>
+                                {/* Notch */}
+                                <div className="absolute top-6 md:top-7 left-1/2 -translate-x-1/2 w-12 md:w-16 h-3.5 md:h-4 bg-[#19255B] rounded-b-xl z-30 flex items-center justify-center">
+                                    <div className="w-1 h-1 rounded-full bg-white/10" />
+                                </div>
                             </div>
-                            {/* Brillo decorativo posterior */}
-                            <div className="absolute -inset-4 bg-[#4ECDC4]/10 blur-3xl -z-10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
 
-                {/* --- ÚNICA FILA DE CARRUSEL --- */}
-                <div className="mt-32">
-                    <TestimonialMarquee items={allTestimonials} />
-                </div>
+                {/* Carrusel Infinito Responsivo */}
+                <TestimonialMarquee items={realTestimonials} />
             </div>
         </section>
     );

@@ -12,36 +12,45 @@ import {
     BarChart3
 } from 'lucide-react';
 
+// Colores del Manual de Identidad
+const brand = {
+    spaceCadet: "#19255B",
+    seaSerpent: "#64C2C8",
+    tuftsBlue: "#3CA0DA",
+    lapisLazuli: "#3065AF",
+    ghostWhite: "#F8FAFC"
+};
+
 const DELIVERABLES = [
     {
         title: "Sesión de Diagnóstico 1:1",
         desc: "60 min vía Zoom para radiografía total.",
         icon: ZoomIn,
-        iconColor: "text-sea-serpent" // Ajustado al color del Hero
+        iconColor: brand.seaSerpent
     },
     {
         title: "Hoja de Diagnóstico",
         desc: "Tu situación actual documentada.",
         icon: FileText,
-        iconColor: "text-cyan-400"
+        iconColor: brand.tuftsBlue
     },
     {
         title: "Hoja de Plan de Inversión",
         desc: "Tu hoja de ruta con instituciones reguladas.",
         icon: TrendingUp,
-        iconColor: "text-emerald-400"
+        iconColor: brand.seaSerpent
     },
     {
         title: "Clases Exclusivas",
         desc: "Acceso mensual a temas financieros por 1 año.",
         icon: MonitorPlay,
-        iconColor: "text-purple-400"
+        iconColor: brand.tuftsBlue
     },
     {
         title: "Revisiones 6 y 12 meses",
         desc: "Seguimiento directo para asegurar metas.",
         icon: CalendarCheck,
-        iconColor: "text-amber-400"
+        iconColor: brand.seaSerpent
     }
 ];
 
@@ -84,8 +93,7 @@ const FloatingSymbols = () => (
 
         <div className="absolute inset-0 opacity-[0.1]"
             style={{
-                // Usamos el color sea-serpent para los puntos del fondo
-                backgroundImage: 'radial-gradient(circle, #4ECDC4 1px, transparent 1px)',
+                backgroundImage: `radial-gradient(circle, ${brand.seaSerpent} 1px, transparent 1px)`,
                 backgroundSize: '70px 70px',
                 maskImage: 'radial-gradient(circle at center, black, transparent 90%)'
             }}
@@ -100,14 +108,13 @@ const DeliverableCard = ({ item, index }: { item: typeof DELIVERABLES[0], index:
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            viewport={{ once: true }}
-            className="group flex items-start gap-6 p-6 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-sea-serpent/30 hover:bg-white/[0.04] transition-all duration-500 backdrop-blur-sm"
+            className="group flex items-start gap-6 p-6 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-[#64C2C8]/30 hover:bg-white/[0.04] transition-all duration-500 backdrop-blur-sm"
         >
-            <div className="p-4 bg-slate-900 rounded-2xl group-hover:scale-110 group-hover:bg-sea-serpent transition-all duration-500 shadow-xl">
-                <Icon className={`transition-colors duration-500 ${item.iconColor} group-hover:text-white`} size={24} />
+            <div className="p-4 bg-slate-900 rounded-2xl group-hover:scale-110 group-hover:bg-[#64C2C8] transition-all duration-500 shadow-xl">
+                <Icon className="transition-colors duration-500 group-hover:text-white" style={{ color: item.iconColor }} size={24} />
             </div>
             <div>
-                <h4 className="text-xl font-bold text-white mb-1 group-hover:text-sea-serpent transition-colors">
+                <h4 className="text-xl font-bold text-white mb-1 group-hover:text-[#64C2C8] transition-colors">
                     {item.title}
                 </h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
@@ -120,15 +127,15 @@ const DeliverableCard = ({ item, index }: { item: typeof DELIVERABLES[0], index:
 
 export const WingsStrategy = () => {
     return (
-        <section className="py-40 bg-white text-slate-900 relative overflow-hidden flex justify-center">
+        <section className="py-40 bg-white text-slate-900 relative overflow-hidden flex justify-center font-sans">
 
-            {/* CONTENEDOR DE PROFUNDIDAD: Ahora usa 'bg-space-cadet' igual que tu Hero */}
-            <div className="absolute inset-x-0 md:inset-x-20 top-10 bottom-10 rounded-[4rem] bg-space-cadet overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] flex justify-center">
+            {/* CONTENEDOR DE PROFUNDIDAD */}
+            <div className="absolute inset-x-0 md:inset-x-20 top-10 bottom-10 rounded-[4rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] flex justify-center"
+                style={{ backgroundColor: brand.spaceCadet }}>
 
                 <div className="absolute inset-0 z-0">
-                    {/* Gradientes ajustados para fundirse con la identidad de marca */}
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(78,205,196,0.1)_0%,transparent_70%)]" />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(15,23,42,0.6)_0%,transparent_100%)]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(100,194,200,0.1)_0%,transparent_70%)]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(25,37,91,0.6)_0%,transparent_100%)]" />
                 </div>
 
                 <FloatingSymbols />
@@ -142,16 +149,18 @@ export const WingsStrategy = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sea-serpent/10 border border-sea-serpent/20 text-sea-serpent mb-6 text-[10px] font-black uppercase tracking-[0.3em]"
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#64C2C8]/10 border border-[#64C2C8]/20 text-[#64C2C8] mb-6 text-[10px] font-black uppercase tracking-[0.3em]"
                     >
                         Metodología Exclusiva
                     </motion.div>
                     <h2 className="text-4xl md:text-6xl font-black leading-[1.1] max-w-4xl tracking-tighter text-white mx-auto">
                         ¿Qué incluye la <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-sea-serpent to-blue-400 italic font-serif">Estrategia Personalizada?</span>
+                        <span className="text-transparent bg-clip-text italic font-serif"
+                            style={{ backgroundImage: `linear-gradient(to right, ${brand.seaSerpent}, ${brand.tuftsBlue})` }}>
+                            Estrategia Personalizada?
+                        </span>
                     </h2>
-                    <p className="mt-8 text-gray-300 text-xl font-light max-w-2xl italic leading-relaxed mx-auto">
+                    <p className="mt-8 text-blue-100/70 text-xl font-light max-w-2xl italic leading-relaxed mx-auto">
                         "Alas del Éxito Financiero" es tu hoja de ruta hacia la libertad, blindada por expertos.
                     </p>
                 </div>
@@ -165,13 +174,13 @@ export const WingsStrategy = () => {
                     </div>
 
                     <div className="lg:col-span-5 relative flex items-center justify-center py-10">
-                        {/* Brillo de fondo usando sea-serpent */}
-                        <div className="absolute inset-0 bg-sea-serpent/10 blur-[120px] rounded-full" />
+                        <div className="absolute inset-0 blur-[120px] rounded-full opacity-20" style={{ backgroundColor: brand.seaSerpent }} />
 
                         <motion.div
                             animate={{ y: [0, -20, 0] }}
                             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                            className="relative z-20 w-full max-w-[390px] bg-gradient-to-br from-sea-serpent/80 to-space-cadet rounded-[3.5rem] p-12 shadow-2xl border border-white/10 overflow-hidden"
+                            className="relative z-20 w-full max-w-[390px] rounded-[3.5rem] p-12 shadow-2xl border border-white/10 overflow-hidden"
+                            style={{ background: `linear-gradient(to bottom right, ${brand.seaSerpent}CC, ${brand.spaceCadet})` }}
                         >
                             <div className="relative z-10 text-center">
                                 <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-white/20 shadow-inner">
@@ -182,7 +191,7 @@ export const WingsStrategy = () => {
                                 </h3>
 
                                 <div className="space-y-4 mb-12 text-left bg-black/30 p-6 rounded-2xl border border-white/5">
-                                    <div className="flex justify-between text-[10px] font-bold text-sea-serpent tracking-widest uppercase italic">
+                                    <div className="flex justify-between text-[10px] font-black tracking-widest uppercase italic" style={{ color: brand.seaSerpent }}>
                                         <span>Seguridad Regulada</span>
                                         <span>100%</span>
                                     </div>
@@ -191,18 +200,18 @@ export const WingsStrategy = () => {
                                             initial={{ width: 0 }}
                                             whileInView={{ width: '100%' }}
                                             transition={{ duration: 2, ease: "easeOut" }}
-                                            viewport={{ once: true }}
-                                            className="h-full bg-gradient-to-r from-sea-serpent to-cyan-300"
+                                            className="h-full"
+                                            style={{ backgroundImage: `linear-gradient(to right, ${brand.seaSerpent}, ${brand.tuftsBlue})` }}
                                         />
                                     </div>
                                 </div>
 
-                                <button className="w-full bg-white text-space-cadet py-5 rounded-2xl font-black hover:bg-sea-serpent hover:text-white transition-all flex items-center justify-center gap-3 group active:scale-95 shadow-xl">
+                                <button className="w-full bg-white py-5 rounded-2xl font-black transition-all flex items-center justify-center gap-3 group active:scale-95 shadow-xl"
+                                    style={{ color: brand.spaceCadet }}>
                                     RESERVAR MI SESIÓN
                                     <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </div>
-                            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
                         </motion.div>
 
                         <motion.div
